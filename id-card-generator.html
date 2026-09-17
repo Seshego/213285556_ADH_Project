@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional ID Card Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .color-picker-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        .card-preview {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+        }
+
+        .id-card-wrapper {
+            perspective: 1000px;
+            display: inline-block;
+        }
+
+        .id-card {
+            width: 450px;
+            height: 280px;
+            background: linear-gradient(135deg, #e0e0e0 0%, #c0c0c0 100%);
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s;
+        }
+
+        .id-card:hover {
+            transform: rotateY(5deg) rotateX(5deg);
+        }
+
+        .id-card-inner {
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .id-card-left {
+            flex: 0 0 140px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-right: 20px;
+        }
+
+        .id-photo {
+            width: 120px;
+            height: 140px;
+            border: 3px solid #333;
+            border-radius: 5px;
+            object-fit: cover;
+            margin-bottom: 10px;
+            background: #f0f0f0;
+        }
+
+        .id-title {
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            padding: 5px 10px;
+            background: #333;
+            color: white;
+            border-radius: 3px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .id-card-right {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .id-header {
+            text-align: left;
+        }
+
+        .org-logo {
+            font-size: 42px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            line-height: 1;
+        }
+
+        .logo-highlight {
+            color: #d32f2f;
+        }
+
+        .org-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .id-details {
+            font-size: 11px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .id-details strong {
+            color: #333;
+        }
+
+        .barcode {
+            margin-top: 10px;
+            height: 40px;
+            background: linear-gradient(90deg, 
+                #000 0%, #000 10%, #fff 10%, #fff 15%,
+                #000 15%, #000 18%, #fff 18%, #fff 22%,
+                #000 22%, #000 30%, #fff 30%, #fff 33%,
+                #000 33%, #000 35%, #fff 35%, #fff 40%,
+                #000 40%, #000 48%, #fff 48%, #fff 52%,
+                #000 52%, #000 55%, #fff 55%, #fff 60%,
+                #000 60%, #000 65%, #fff 65%, #fff 68%,
+                #000 68%, #000 75%, #fff 75%, #fff 80%,
+                #000 80%, #000 82%, #fff 82%, #fff 88%,
+                #000 88%, #000 95%, #fff 95%, #fff 100%
+            );
+            border-radius: 3px;
+            border: 1px solid #ddd;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .id-card {
+                transform: scale(0.8);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎫 Professional ID Card Generator</h1>
+        
+        <div class="form-section">
+            <h2 style="margin-bottom: 20px; color: #555;">Customize Your Card</h2>
+            
+            <div class="form-group">
+                <label for="orgName">Organization Name:</label>
+                <input type="text" id="orgName" value="Stingy Men Society" placeholder="Enter organization name">
+            </div>
+
+            <div class="form-group">
+                <label for="orgAcronym">Organization Acronym:</label>
+                <input type="text" id="orgAcronym" value="SMS" placeholder="e.g., SMS">
+            </div>
+
+            <div class="form-group">
+                <label for="title">Title/Position:</label>
+                <input type="text" id="title" value="CHAIRMAN" placeholder="e.g., CHAIRMAN, MEMBER">
+            </div>
+
+            <div class="form-group">
+                <label for="memberId">Member ID:</label>
+                <input type="text" id="memberId" value="092-4410-SMS" placeholder="e.g., 092-4410-SMS">
+            </div>
+
+            <div class="form-group">
+                <label for="issueDate">Issue Date:</label>
+                <input type="text" id="issueDate" value="01/2024" placeholder="MM/YYYY">
+            </div>
+
+            <div class="form-group">
+                <label for="logoColor">Logo Accent Color:</label>
+                <input type="color" id="logoColor" value="#d32f2f">
+            </div>
+
+            <button onclick="updateCard()">🔄 Update Card</button>
+        </div>
+
+        <div class="card-preview">
+            <div class="id-card-wrapper">
+                <div class="id-card">
+                    <div class="id-card-inner">
+                        <div class="id-card-left">
+                            <img src="assets/01a0ae95-7aa0-7d9c-ba8d-a393b6284883.jpg" alt="ID Photo" class="id-photo" id="idPhoto">
+                            <div class="id-title" id="cardTitle">CHAIRMAN</div>
+                        </div>
+                        <div class="id-card-right">
+                            <div class="id-header">
+                                <div class="org-logo" id="orgLogo">
+                                    <span id="logoFirstLetter">S</span><span class="logo-highlight" id="logoMiddleLetter">M</span><span id="logoLastLetter">S</span>
+                                </div>
+                                <div class="org-name" id="orgFullName">Stingy Men Society</div>
+                            </div>
+                            <div class="id-details">
+                                <div><strong>Member ID:</strong> <span id="displayMemberId">092-4410-SMS</span></div>
+                                <div><strong>Issue Date:</strong> <span id="displayIssueDate">01/2024</span></div>
+                            </div>
+                            <div class="barcode"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button class="download-btn" onclick="downloadCard()">📥 Download Card as Image</button>
+    </div>
+
+    <script>
+        function updateCard() {
+            const orgName = document.getElementById('orgName').value;
+            const orgAcronym = document.getElementById('orgAcronym').value;
+            const title = document.getElementById('title').value;
+            const memberId = document.getElementById('memberId').value;
+            const issueDate = document.getElementById('issueDate').value;
+            const logoColor = document.getElementById('logoColor').value;
+
+            document.getElementById('cardTitle').textContent = title.toUpperCase();
+            document.getElementById('orgFullName').textContent = orgName;
+            document.getElementById('displayMemberId').textContent = memberId;
+            document.getElementById('displayIssueDate').textContent = issueDate;
+
+            if (orgAcronym.length >= 3) {
+                document.getElementById('logoFirstLetter').textContent = orgAcronym[0];
+                document.getElementById('logoMiddleLetter').textContent = orgAcronym[1];
+                document.getElementById('logoLastLetter').textContent = orgAcronym[2];
+            } else {
+                document.getElementById('orgLogo').textContent = orgAcronym;
+            }
+
+            document.querySelector('.logo-highlight').style.color = logoColor;
+        }
+
+        async function downloadCard() {
+            alert('To save your card:\n\n1. Right-click on the card\n2. Select "Save image as..."\n\nOr:\n\n1. Take a screenshot of the card\n2. Crop it to your desired size\n\nFor best quality, use a screenshot tool at high resolution!');
+        }
+
+        updateCard();
+    </script>
+</body>
+</html>
